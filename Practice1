@@ -1,0 +1,3 @@
+unum = int(input('Provide a number: '))
+divisors = [x for x in range(1,unum+1) if unum % x == 0]
+print(f'Divisors: {divisors}')
