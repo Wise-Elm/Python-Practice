@@ -1,0 +1,36 @@
+print('Enter Quit to end program')
+player_one = input('Enter name for Player 1: ')
+player_two = input('Enter name for Player 2: ')
+
+while True:
+    po = input(f'{player_one}, Choose Rock, Paper, or Scissors: ')
+    if po.lower().strip() == 'quit':
+        break
+    if po.lower().strip() != 'rock' and po.lower().strip() != 'paper' and po.lower().strip() != 'scissors':
+        print('Invalid input')
+        continue
+    pt = input(f'{player_two}, Choose Rock, Paper, or Scissors: ')
+    if pt.lower().strip() == 'quit':
+        break
+    if pt.lower().strip() != 'rock' and pt.lower().strip() != 'paper' and pt.lower().strip() != 'scissors':
+        print('Invalid input')
+        continue
+    elif po.lower().strip() == pt.lower().strip():
+        print('Tie!')
+    elif po.lower().strip() == 'rock':
+        if pt.lower().strip() == 'scissors':
+            print(f'{player_one} - Rock - Wins!')
+        else:
+            print(f'{player_two} - Paper - Wins!')
+    elif po.lower().strip() == 'paper':
+        if pt.lower().strip() == 'rock':
+            print(f'{player_one} - Paper - Wins!')
+        else:
+            print(f'{player_two} - Scissors - Wins!')
+    elif po.lower().strip() == 'scissors':
+        if pt.lower().strip() == 'rock':
+            print(f'{player_one} - Rock - Wins!')
+        else:
+            print(f'{player_two} - Scissors - Wins')
+
+print('Thanks for playing')
