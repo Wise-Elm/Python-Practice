@@ -4,31 +4,33 @@ player_two = input('Enter name for Player 2: ')
 
 while True:
     po = input(f'{player_one}, Choose Rock, Paper, or Scissors: ')
-    if po.lower().strip() == 'quit':
+    po = po.strip().lower()
+    if po == 'quit':
         break
-    if po.lower().strip() != 'rock' and po.lower().strip() != 'paper' and po.lower().strip() != 'scissors':
+    if po != 'rock' and po != 'paper' and po != 'scissors':
         print('Invalid input')
         continue
     pt = input(f'{player_two}, Choose Rock, Paper, or Scissors: ')
-    if pt.lower().strip() == 'quit':
+    pt = pt.strip().lower()
+    if pt == 'quit':
         break
-    if pt.lower().strip() != 'rock' and pt.lower().strip() != 'paper' and pt.lower().strip() != 'scissors':
+    if pt != 'rock' and pt != 'paper' and pt != 'scissors':
         print('Invalid input')
         continue
-    elif po.lower().strip() == pt.lower().strip():
+    elif po == pt:
         print('Tie!')
-    elif po.lower().strip() == 'rock':
-        if pt.lower().strip() == 'scissors':
+    elif po == 'rock':
+        if pt == 'scissors':
             print(f'{player_one} - Rock - Wins!')
         else:
             print(f'{player_two} - Paper - Wins!')
-    elif po.lower().strip() == 'paper':
-        if pt.lower().strip() == 'rock':
+    elif po == 'paper':
+        if pt == 'rock':
             print(f'{player_one} - Paper - Wins!')
         else:
             print(f'{player_two} - Scissors - Wins!')
-    elif po.lower().strip() == 'scissors':
-        if pt.lower().strip() == 'rock':
+    elif po == 'scissors':
+        if pt == 'rock':
             print(f'{player_one} - Rock - Wins!')
         else:
             print(f'{player_two} - Scissors - Wins')
