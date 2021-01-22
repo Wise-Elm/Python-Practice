@@ -1,0 +1,80 @@
+import random
+
+def menu():
+    print('Hello; which game would you like to play: ')
+    print('Enter  1  for Random Number Guesser')
+    print('Enter  2  for Rock, Paper, Scissors')
+    x = input('Pick a game or type quit to end program: ')
+    x = int(x)
+    if x == 1:
+        random_number()
+    elif x == 2:
+        rps()
+    else:
+        print('Invalid Input')
+
+def random_number():
+    print('\nWelcome to Random Number Guesser')
+    print('Type Quit to end program')
+    guess = 0
+    while True:
+        a = input('Pick a number from 1 - 9: ')
+        x = random.randint(1,9)
+        guess += 1
+        if a.lower().strip() == 'quit':
+            print('Thanks for playing\n')
+            menu()
+            break
+        a = int(a)
+        if a not in range(1,10):
+            print('Invalid input')
+        if a > x:
+            print(f'Your number is too high. The correct number is {x}')
+        elif a < x:
+            print(f'Your number is too low. The correct number is {x}')
+        else:
+            print(f'You picked the right number, and it only took you {guess} tries.')
+            guess = 0
+
+def rps():
+    print('\nEnter Quit to end program')
+    player_one = input('Enter name for Player 1: ')
+    player_two = input('Enter name for Player 2: ')
+    while True:
+        po = input(f'{player_one}, Choose Rock, Paper, or Scissors: ')
+        po = po.strip().lower()
+        if po == 'quit':
+            print('Thanks for playing\n')
+            menu()
+            break
+        if po != 'rock' and po != 'paper' and po != 'scissors':
+            print('Invalid input')
+            continue
+        pt = input(f'{player_two}, Choose Rock, Paper, or Scissors: ')
+        pt = pt.strip().lower()
+        if pt == 'quit':
+            print('Thanks for playing')
+            menu()
+            break
+        if pt != 'rock' and pt != 'paper' and pt != 'scissors':
+            print('Invalid input')
+            continue
+        elif po == pt:
+            print('Tie!')
+        elif po == 'rock':
+            if pt == 'scissors':
+                print(f'{player_one} - Rock - Wins!')
+            else:
+                print(f'{player_two} - Paper - Wins!')
+        elif po == 'paper':
+            if pt == 'rock':
+                print(f'{player_one} - Paper - Wins!')
+            else:
+                print(f'{player_two} - Scissors - Wins!')
+        elif po == 'scissors':
+            if pt == 'rock':
+                print(f'{player_one} - Rock - Wins!')
+            else:
+                print(f'{player_two} - Scissors - Wins')
+
+menu()
