@@ -1,7 +1,8 @@
 import random
 
+
 def menu():
-    print('Hello; which game would you like to play: ')
+    print(f'\nHello {pname}; which game would you like to play: ')
     print('Enter  1  for Random Number Guesser')
     print('Enter  2  for Rock, Paper, Scissors')
     x = input('Pick a game or type quit to end program: ')
@@ -13,68 +14,109 @@ def menu():
     else:
         print('Invalid Input')
 
+
 def random_number():
     print('\nWelcome to Random Number Guesser')
-    print('Type Quit to end program')
+    print('Type menu to return to the Menu')
     guess = 0
     while True:
         a = input('Pick a number from 1 - 9: ')
-        x = random.randint(1,9)
+        a = a.lower().strip()
+        x = random.randint(1, 9)
         guess += 1
-        if a.lower().strip() == 'quit':
-            print('Thanks for playing\n')
-            menu()
-            break
-        a = int(a)
-        if a not in range(1,10):
+        try:
+            if a == 'menu':
+                print(f'Thanks for playing {pname}\n')
+                menu()
+                break
+            if int(a) not in range(1, 10):
+                print('Invalid input')
+                continue
+            a = int(a)
+            if a not in range(1, 10):
+                print('Invalid input')
+                continue
+            if a > x:
+                print(f'Your number is too high. The correct number is {x}')
+            elif a < x:
+                print(f'Your number is too low. The correct number is {x}')
+            else:
+                print(f'You picked the right number, and it only took you {guess} tries.')
+                guess = 0
+        except:
             print('Invalid input')
-        if a > x:
-            print(f'Your number is too high. The correct number is {x}')
-        elif a < x:
-            print(f'Your number is too low. The correct number is {x}')
-        else:
-            print(f'You picked the right number, and it only took you {guess} tries.')
-            guess = 0
+            continue
+
 
 def rps():
-    print('\nEnter Quit to end program')
-    player_one = input('Enter name for Player 1: ')
-    player_two = input('Enter name for Player 2: ')
+    print('\nEnter Quit to return to the Menu')
+    print('Lets test your skills against the computer. First to 5 wins!')
+    player_wins = 0
+    computer_wins = 0
+
     while True:
-        po = input(f'{player_one}, Choose Rock, Paper, or Scissors: ')
-        po = po.strip().lower()
-        if po == 'quit':
+        choice = input(f'{pname}; choose Rock, Paper, or Scissors: ')
+        choice = choice.strip().lower()
+        cpick = random.randint(1, 3)
+        if player_wins == 4:
+            print(f'\n{pname}, you won!')
+            pinput = input('Enter RPS to play again or hit enter for Menu: ')
+            if pinput == 'RPS':
+                rps()
+            else:
+                menu()
+        if computer_wins == 4:
+            print('\nThe computer won!')
+            pinput = input('Enter RPS to play again or hit enter for Menu: ')
+            pinput = pinput.lower().strip()
+            if pinput == 'rps':
+                rps()
+            else:
+                menu()
+        if cpick == 1:
+            computer = 'rock'
+        elif cpick == 2:
+            computer = 'paper'
+        else:
+            computer = 'scissors'
+        if choice == 'quit':
             print('Thanks for playing\n')
             menu()
             break
-        if po != 'rock' and po != 'paper' and po != 'scissors':
-            print('Invalid input')
+        if choice != 'rock' and choice != 'paper' and choice != 'scissors':
+            print('Invalid Entry')
             continue
-        pt = input(f'{player_two}, Choose Rock, Paper, or Scissors: ')
-        pt = pt.strip().lower()
-        if pt == 'quit':
-            print('Thanks for playing')
-            menu()
-            break
-        if pt != 'rock' and pt != 'paper' and pt != 'scissors':
-            print('Invalid input')
-            continue
-        elif po == pt:
-            print('Tie!')
-        elif po == 'rock':
-            if pt == 'scissors':
-                print(f'{player_one} - Rock - Wins!')
+        elif choice == computer:
+            print(f'Tie, you both picked {choice}')
+        elif choice == 'rock':
+            if computer == 'scissors':
+                print(f'{pname} wins with Rock')
+                player_wins += 1
+                print(f'{pname} {player_wins} --- Computer {computer_wins}')
             else:
-                print(f'{player_two} - Paper - Wins!')
-        elif po == 'paper':
-            if pt == 'rock':
-                print(f'{player_one} - Paper - Wins!')
+                print(f'The computer wins with Paper')
+                computer_wins += 1
+                print(f'{pname} {player_wins} --- Computer {computer_wins}')
+        elif choice == 'paper':
+            if computer == 'rock':
+                print(f'{pname} wins with Paper')
+                player_wins += 1
+                print(f'{pname} {player_wins} --- Computer {computer_wins}')
             else:
-                print(f'{player_two} - Scissors - Wins!')
-        elif po == 'scissors':
-            if pt == 'rock':
-                print(f'{player_one} - Rock - Wins!')
+                print(f'The computer wins with Scissors')
+                computer_wins += 1
+                print(f'{pname} {player_wins} --- Computer {computer_wins}')
+        elif choice == 'scissors':
+            if computer == 'paper':
+                print(f'{pname} wins with Scissors')
+                player_wins += 1
+                print(f'{pname} {player_wins} --- Computer {computer_wins}')
             else:
-                print(f'{player_two} - Scissors - Wins')
+                print(f'The computer wins with Rock')
+                computer_wins += 1
+                print(f'{pname} {player_wins} --- Computer {computer_wins}')
 
+
+pname = input('What is your name? ')
+pname = pname.capitalize()
 menu()
