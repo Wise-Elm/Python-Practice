@@ -2,7 +2,7 @@ import random
 
 
 def menu():
-    print(f'\nHello {pname}; which game would you like to play: ')
+    print(f'\nHello {pname}; Welcome to Cousin Eddies casino games inspired by National Lampoons Vegas Vacation: ')
     print('Enter  1  for Random Number Guesser')
     print('Enter  2  for Rock, Paper, Scissors')
     x = input('Pick a game or type quit to end program: ')
@@ -49,7 +49,7 @@ def random_number():
 
 
 def rps():
-    print('\nEnter Quit to return to the Menu')
+    print('\nEnter menu to return to the Menu')
     print('Lets test your skills against the computer. First to 5 wins!')
     player_wins = 0
     computer_wins = 0
@@ -79,7 +79,7 @@ def rps():
             computer = 'paper'
         else:
             computer = 'scissors'
-        if choice == 'quit':
+        if choice == 'menu':
             print('Thanks for playing\n')
             menu()
             break
