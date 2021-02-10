@@ -1,10 +1,13 @@
+max_problems_amount = 5
+
+
 def arithmetic_arranger(problems, x=False):
     operand_one = ''
     operand_two = ''
     dividing_line = ''
     answers = ''
 
-    if len(problems) > 5:
+    if len(problems) > max_problems_amount:
         return "Error: Too many problems."
     else:
         for pieces in problems:
