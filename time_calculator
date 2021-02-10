@@ -1,0 +1,82 @@
+def add_time(start, duration, day=False):
+
+    start_pieces = start.split() #seperates start time from AM/PM
+    start_h_m = start_pieces[0].split(':') # seperates start time hours from minutes
+
+    start_hours = start_h_m[0]
+    start_minutes = start_h_m[1]
+    start_am_or_pm = start_pieces[1]
+
+
+    duration_h_m = duration.split(':') # seperates duration time hours from minutes
+
+    duration_hours = duration_h_m[0]
+    duration_minutes = duration_h_m[1]
+
+    updated_time(start_hours, start_minutes, start_am_or_pm, duration_hours, duration_minutes)
+
+
+def updated_time(s_hours, s_minutes, am_pm, d_hours, d_minutes):
+    s_hours = int(s_hours)
+    s_minutes = int(s_minutes)
+    d_hours = int(d_hours)
+    d_minutes = int(d_minutes)
+    am_pm = am_pm
+
+    day_count = 0
+    days_later = ''
+    day_of_week = ''
+
+    total_minutes = s_minutes + d_minutes
+    total_hours = s_hours + d_hours
+
+    #print(am_pm + " am_pm")
+    #print(days_later + " days_later")
+    #print(str(day_count) + " day_count\n")
+
+    #while d_hours >= 12:
+        #if am_pm == 'AM':
+            #am_pm = 'PM'
+        #else:
+            #am_pm = 'AM'
+            #day_count += 1
+        #d_hours -= 12
+
+    #print(am_pm + " am_pm")
+    #print(days_later + " days_later")
+    #print(str(day_count) + " day_count\n")
+
+    while total_minutes >= 60:
+        total_hours += 1
+        if total_hours == 12:
+            if am_pm == 'PM':
+                am_pm = 'AM'
+            else:
+                am_pm = 'PM'
+        total_minutes -= 60
+
+    #print(am_pm + " am_pm")
+    #print(days_later + " days_later")
+    #print(str(day_count) + " day_count\n")
+
+    while total_hours >= 13:
+        total_hours -= 12
+        if am_pm == 'AM':
+            am_pm = 'PM'
+        else:
+            am_pm = 'AM'
+            day_count += 1
+
+    if day_count == 0:
+        days_later = ''
+    elif day_count == 1:
+        days_later = "(Next day)"
+    elif day_count > 1:
+        days_later = f"({day_count} days later)"
+
+    #print(am_pm + " am_pm")
+    #print(days_later + " days_later")
+    #print(str(day_count) + " day_count\n")
+
+    print(f"{total_hours}:{total_minutes:02d} {am_pm} {days_later}")
+    return f"{total_hours}:{total_minutes:02d} {am_pm} {days_later}"
