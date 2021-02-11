@@ -8,15 +8,17 @@ def add_time(start, duration, day=False):
     start_am_or_pm = start_pieces[1]
 
 
-    duration_h_m = duration.split(':') # seperates duration time hours from minutes
+    duration_h_m = duration.split(':') #seperates duration time hours from minutes
 
     duration_hours = duration_h_m[0]
     duration_minutes = duration_h_m[1]
 
-    updated_time(start_hours, start_minutes, start_am_or_pm, duration_hours, duration_minutes)
+    time = updated_time(start_hours, start_minutes, start_am_or_pm, duration_hours, duration_minutes, day)
+
+    return time.strip()
 
 
-def updated_time(s_hours, s_minutes, am_pm, d_hours, d_minutes):
+def updated_time(s_hours, s_minutes, am_pm, d_hours, d_minutes, day):
     s_hours = int(s_hours)
     s_minutes = int(s_minutes)
     d_hours = int(d_hours)
@@ -25,39 +27,19 @@ def updated_time(s_hours, s_minutes, am_pm, d_hours, d_minutes):
 
     day_count = 0
     days_later = ''
-    day_of_week = ''
 
     total_minutes = s_minutes + d_minutes
     total_hours = s_hours + d_hours
 
-    #print(am_pm + " am_pm")
-    #print(days_later + " days_later")
-    #print(str(day_count) + " day_count\n")
-
-    #while d_hours >= 12:
-        #if am_pm == 'AM':
-            #am_pm = 'PM'
-        #else:
-            #am_pm = 'AM'
-            #day_count += 1
-        #d_hours -= 12
-
-    #print(am_pm + " am_pm")
-    #print(days_later + " days_later")
-    #print(str(day_count) + " day_count\n")
-
     while total_minutes >= 60:
         total_hours += 1
-        if total_hours == 12:
+        if total_hours % 12 == 0:
             if am_pm == 'PM':
                 am_pm = 'AM'
+                day_count += 1
             else:
                 am_pm = 'PM'
         total_minutes -= 60
-
-    #print(am_pm + " am_pm")
-    #print(days_later + " days_later")
-    #print(str(day_count) + " day_count\n")
 
     while total_hours >= 13:
         total_hours -= 12
@@ -70,13 +52,53 @@ def updated_time(s_hours, s_minutes, am_pm, d_hours, d_minutes):
     if day_count == 0:
         days_later = ''
     elif day_count == 1:
-        days_later = "(Next day)"
+        days_later = "(next day)"
     elif day_count > 1:
         days_later = f"({day_count} days later)"
 
-    #print(am_pm + " am_pm")
-    #print(days_later + " days_later")
-    #print(str(day_count) + " day_count\n")
 
-    print(f"{total_hours}:{total_minutes:02d} {am_pm} {days_later}")
-    return f"{total_hours}:{total_minutes:02d} {am_pm} {days_later}"
+    if day:
+        cur_day = day_of_week(day_count, day)
+        result = f"{total_hours}:{total_minutes:02d} {am_pm}, {cur_day} {days_later}"
+    else:
+        result = f"{total_hours}:{total_minutes:02d} {am_pm} {days_later}"
+
+    return result
+
+
+def day_of_week(day_count, day):
+    max_days_in_week_s_w_0 = 6  # goes from 0-6, for tuple indexing
+    max_days_in_week_s_w_1 = 7  # goes from 1-7
+    day = day.lower()
+
+    week = ('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday')
+
+    start_day_index = week.index(day)
+    final_day_index = start_day_index + day_count
+
+    while final_day_index > max_days_in_week_s_w_0:
+        final_day_index -= max_days_in_week_s_w_1
+
+    updated_day_result = week[final_day_index].title()
+    return updated_day_result
+
+
+
+
+add_time("3:00 PM", "3:10")
+# Returns: 6:10 PM
+
+add_time("11:30 AM", "2:32", "Monday")
+# Returns: 2:02 PM, Monday
+
+add_time("11:43 AM", "00:20")
+# Returns: 12:03 PM
+
+add_time("10:10 PM", "3:30")
+# Returns: 1:40 AM (next day)
+
+add_time("11:43 PM", "24:20", "tueSday")
+# Returns: 12:03 AM, Thursday (2 days later)
+
+add_time("6:30 PM", "205:12")
+# Returns: 7:42 AM (9 days later)
