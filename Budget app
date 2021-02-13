@@ -66,9 +66,9 @@ class Category:
         # If there are not enough funds, nothing should be added to either ledgers.
 
         if self.check_funds(amount):
-            self.withdraw(amount, f'Transfer to [{category.category}]')
+            self.withdraw(amount, f'Transfer to {category.category}')
             x = category
-            x.deposit(amount, f'Transfer from [{self.category}]')
+            x.deposit(amount, f'Transfer from {self.category}')
 
             return True
         else:
@@ -84,7 +84,32 @@ class Category:
         else:
             return True
 
-    
+    def __str__(self):
+        # Prints object in nice looking format
+
+        dict = {}
+
+        title_line = ('*' * ((30 - len(self.category)) // 2)) + self.category + \
+                     ('*' * ((30 - len(self.category)) // 2)) + '\n'
+        body_lines = ''
+        footer_line = f'Total: {self.balance}'
+
+        # arranging items in self.ledger
+        for x in self.ledger:
+            list = []
+            for v in x.values():
+                list.append(v)
+            dict[list[1]] = list[0]
+
+        # arranging transaction list
+        for k, v in dict.items():
+            line = k[:23].ljust(23) + "{:.2f}".format(v).rjust(7)
+            body_lines += line + "\n"
+
+        chart = title_line + body_lines + footer_line
+
+        return chart
+
 
 
 
@@ -92,8 +117,9 @@ food = Category("Food")
 food.deposit(1000, "initial deposit")
 food.withdraw(10.15, "groceries")
 food.withdraw(15.89, "restaurant and more food for dessert")
-print(food.get_balance())
+# print(food.get_balance())
 clothing = Category("Clothing")
+clothing.deposit(1500, "initial deposit")
 food.transfer(50, clothing)
 clothing.withdraw(25.55)
 clothing.withdraw(100)
@@ -101,7 +127,5 @@ auto = Category("Auto")
 auto.deposit(1000, "initial deposit")
 auto.withdraw(15)
 
-print(food)
+#print(food)
 print(clothing)
-
-       # `{"amount": amount, "description": description}`.
