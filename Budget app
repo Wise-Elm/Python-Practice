@@ -12,8 +12,8 @@ class Category:
         # to an empty string. The method should append an object to the ledger list in
         # the form of `{"amount": amount, "description": description}`
 
-        self.amount = amount
-        self.description = description
+        description = description
+        amount = amount
 
         x = {}
         x["amount"] = amount
@@ -30,14 +30,15 @@ class Category:
         # nothing should be added to the ledger. This method should
         # return `True` if the withdrawal took place, and `False` otherwise.
 
-        self.amount = amount
-        self.description = description
+        amount = amount
+        description = description
 
         if not self.check_funds(amount):
             return False
         else:
             if amount > 0:
-                amount -= amount * 2
+                #amount -= amount * 2
+                amount = -amount
             x = {"amount": amount, "description": description}
 
             self.ledger.append(x)
@@ -59,8 +60,7 @@ class Category:
 
         if self.check_funds(amount):
             self.withdraw(amount, f'Transfer to {category.category}')
-            x = category
-            x.deposit(amount, f'Transfer from {self.category}')
+            category.deposit(amount, f'Transfer from {self.category}')
 
             return True
         else:
@@ -89,7 +89,7 @@ class Category:
             list = []
             for k, v in x.items():
                 list.append(v)
-            line = list[1][:23].ljust(23) + "{:.2f}".format(list[0]).rjust(7)
+            line = list[1][:23].ljust(23) + "{:.2f}".format(list[0]).rjust(7)  # 23 is max description length
             body_lines += line + '\n'
 
         chart = title_line + body_lines + footer_line
@@ -101,10 +101,7 @@ def create_spend_chart(categories):
     # takes a list of spending Categories and return a string that is a spending bar chart
 
     title = 'Percentage spent by category'  # title line
-    body = ''
     y_axis = '    '+ ('-' * (3 * len(categories)) + '-')  # base line
-    labels = ''
-
     graph = ''
     graph += title + '\n'
     x = 100  # max percentage
@@ -130,7 +127,7 @@ def create_spend_chart(categories):
     graph += '\n    '
     row = 0
     while row < n_length:
-        for x in n_list:
+        for x in n_list:  # if row bigger than len(x)
             try:
                 graph += f' {x[row]} '
             except:
@@ -143,6 +140,7 @@ def create_spend_chart(categories):
     graph = graph.rstrip()
     graph += '  '
 
+    #print(graph)
     return graph
 
 
@@ -164,22 +162,22 @@ def name_length(n_list):
 
 def percentage(categories):
     # Finds percentages for create_spend_chart()
-    list = []  # list of all withdraws for all categories
+    lst = []  # list of all withdraws for all categories
     c_withdraw_totals = []  # sums for each category
 
     for i in categories:
         withdraw_amounts = []  # for each category
         for x in i.ledger:
-            if x["amount"] < 0:
+            if x["amount"] < 0:  # looking for withdraws.
                 withdraw_amounts.append(x["amount"])
-                list.append(x["amount"])
+                lst.append(x["amount"])
         c_withdraw_totals.append(sum(withdraw_amounts))
 
     c_withdraw_totals = [float(i) for i in c_withdraw_totals]  # convert to float
-    list = [float(i) for i in list]  # convert to float
+    lst = [float(i) for i in lst]  # convert to float
 
     # finds total of list[] to calculate the average
-    total = sum(list)
+    total = sum(lst)
     total = "{:.2f}".format(total)
     total = float(total)
 
@@ -192,6 +190,7 @@ def percentage(categories):
     averages = category_w_averages(categories, list_of_averages)
     return averages  # returns a dictionary of averages for each category
 
+
 def category_w_averages(categories, list_of_averages):
     # binds each category with its average amount of spending into a list of dictionaries
 
@@ -203,11 +202,36 @@ def category_w_averages(categories, list_of_averages):
     dictionary = dict(zip(c_list, list_of_averages))
 
     return dictionary
-    
-    
-    
-    
-# example class/function calls
+
+
+
+
+
+#food = Category("Food")
+#food.deposit(1000, "initial deposit")
+#food.withdraw(10.15, "groceries")
+#food.withdraw(15.89, "restaurant and more food for dessert")
+# print(food.get_balance())
+#clothing = Category("Clothing")
+#clothing.deposit(1500, "initial deposit")
+#food.transfer(50, clothing)
+#clothing.withdraw(25.55)
+#clothing.withdraw(100)
+#auto = Category("Auto")
+#auto.deposit(1000, "initial deposit")
+#auto.withdraw(15)
+
+
+
+#print(food)
+#print(clothing)
+#print(auto)
+
+
+#percentage([food, clothing, auto])
+
+
+#create_spend_chart([food, clothing, auto])
 
 food = Category("Food")
 entertainment = Category("Entertainment")
@@ -219,3 +243,10 @@ food.withdraw(105.55)
 entertainment.withdraw(33.40)
 business.withdraw(10.99)
 create_spend_chart([business, food, entertainment])
+
+expected = "Percentage spent by category\n100|          \n 90|          \n 80|          \n 70|    o     \n 60|    o     \n 50|    o     \n 40|    o     \n 30|    o     \n 20|    o  o  \n 10|    o  o  \n  0| o  o  o  \n    ----------\n     B  F  E  \n     u  o  n  \n     s  o  t  \n     i  d  e  \n     n     r  \n     e     t  \n     s     a  \n     s     i  \n           n  \n           m  \n           e  \n           n  \n           t  "
+print(expected)
+
+
+
+
