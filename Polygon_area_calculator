@@ -1,0 +1,185 @@
+#### Assignment
+
+#In this project you will use object oriented programming to create a Rectangle class and a Square class.
+# The Square class should be a subclass of Rectangle and inherit methods and attributes.
+
+#### Rectangle class
+#When a Rectangle object is created, it should be initialized with `width` and `height` attributes.
+# The class should also contain the following methods:
+#* `set_width`
+#* `set_height`
+#* `get_area`: Returns area (`width * height`)
+#* `get_perimeter`: Returns perimeter (`2 * width + 2 * height`)
+#* `get_diagonal`: Returns diagonal (`(width ** 2 + height ** 2) ** .5`)
+#* `get_picture`: Returns a string that represents the shape using lines of "\*".
+# The number of lines should be equal to the height and the number of "\*" in each line should be equal to the width.
+# There should be a new line (`\n`) at the end of each line. If the width or height is larger than 50,
+# this should return the string: "Too big for picture.".
+
+#* `get_amount_inside`: Takes another shape (square or rectangle) as an argument.
+# Returns the number of times the passed in shape could fit inside the shape (with no rotations).
+# For instance, a rectangle with a width of 4 and a height of 8 could fit in two squares with sides of 4.
+
+#Additionally, if an instance of a Rectangle is represented as a string,
+# it should look like: `Rectangle(width=5, height=10)`
+
+#### Square class
+#The Square class should be a subclass of Rectangle. When a Square object is created,
+# a single side length is passed in. The `__init__` method should store the side length in
+# both the `width` and `height` attributes from the Rectangle class.
+
+#The Square class should be able to access the Rectangle class methods but should also contain a `set_side` method.
+# If an instance of a Square is represented as a string, it should look like: `Square(side=9)`
+
+#Additionally, the `set_width` and `set_height` methods on the Square class should set both the width and height.
+
+#### Usage example
+#```py
+#rect = shape_calculator.Rectangle(10, 5)
+#print(rect.get_area())
+#rect.set_height(3)
+#print(rect.get_perimeter())
+#print(rect)
+#print(rect.get_picture())
+
+#sq = shape_calculator.Square(9)
+#print(sq.get_area())
+#sq.set_side(4)
+#print(sq.get_diagonal())
+#print(sq)
+#print(sq.get_picture())
+
+#rect.set_height(8)
+#rect.set_width(16)
+#print(rect.get_amount_inside(sq))
+#```
+#That code should return:
+#```
+#50
+#26
+#Rectangle(width=10, height=3)
+#**********
+#**********
+#**********
+
+#81
+#5.656854249492381
+#Square(side=4)
+#****
+#****
+#****
+#****
+
+#8
+#```
+
+
+
+
+
+class Rectangle:
+
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+        self.area = None
+        self.perimeter = None
+        self.diagonal = None
+
+    def set_width(self, width):
+        """sets the width of the rectangle"""
+        self.width = width
+
+        if Square(Rectangle):  # if object of Rectangle is also a Square; automatically makes width & height equal
+            self.side_length = width
+
+    def set_height(self, height):
+        """sets the height of the rectangle"""
+        self.height = height
+
+        if Square(Rectangle):  # if object of Rectangle is also a Square; automatically makes width & height equal
+            self.side_length = height
+
+    def get_area(self):
+        """returns the area of the rectangle"""
+        self.area = self.width * self.height  # (`width * height`)
+        return self.area
+
+    def get_perimeter(self):
+        """returns the perimeter of the rectangle"""
+        self.perimeter = (2 * self.width + 2 * self.height)  # perimeter (`2 * width + 2 * height`)
+        return self.perimeter
+
+    def get_diagonal(self):
+        """returns the diagonal of the rectangle"""
+        """Example:
+        ****
+        ****
+        ****
+        ****"""
+
+        self.diagonal = ((self.width ** 2 + self.height ** 2) ** .5)  # diagonal (`(width ** 2 + height ** 2) ** .5`)
+        return self.diagonal
+
+    def get_picture(self):
+        """returns a visual representation of the rectangle up to a max height or width of 50"""
+
+        if self.height > 50 or self.width > 50:  # makes sure rectangle does not have a height or width over 50
+            return "Too big for picture."
+
+        # creates the rectangle representation
+        stri = ''
+        row = '*' * self.width  # creates a row of '*' the same length as the rectangle width
+        for i in range(self.height):  # creates additional rows depending on the height of the rectangle
+            stri += row + '\n'  # adds additional rows to stri
+        stri.rstrip('\n')
+
+        return stri
+
+    def __str__(self):
+        """if an instance of Rectangle is represented as a string it will
+        take the form 'Rectangle (width=5, height=10)'"""
+
+        stri = f'Rectangle(width={self.width}, height={self.height})'
+
+        return stri
+
+    def get_amount_inside(self, polygon):
+        """takes another shape (square or rectangle) as an argument. Returns the number of times the passed in
+        shape could fit inside the shape (with no rotations). For instance, a rectangle with a width of 4 and
+        a height of 8 could fit in itself two squares with sides of 4."""
+
+        # determines how many of shape polygon can fit in the Rectangle's height
+        height_comparison = self.height // polygon.height
+        # determines how many of shape polygon can fit in the Rectangle' width
+        width_comparison = self.width // polygon.width
+        # makes sure at least one of the polygon can fit in the Rectangle
+        if height_comparison == 0 or width_comparison == 0:
+            return 0
+
+        # finds out how many of the argument poylgon will fit into the Rectangle
+        fit_inside = height_comparison * width_comparison
+
+        return fit_inside
+
+
+class Square(Rectangle):
+
+    def __init__(self, side_length):
+        self.side_length = side_length
+        self.width = side_length
+        self.height = side_length
+        super().__init__(self.width, self.height)  # this does not seem to do anything???
+
+    def set_side(self, side_length):
+        self.side_length = side_length
+        self.width = side_length
+        self.height = side_length
+
+    def __str__(self):
+        """if an instance of Square is represented as a string it will
+        take the form 'Square(side=9)'"""
+        stri = f'Square(side={self.side_length})'
+        return stri
+
+
