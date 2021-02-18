@@ -7,7 +7,7 @@ class Category:
         self.ledger = []
         self.balance = 0
 
-    def deposit(self, amount, description=None):
+    def deposit(self, amount, description=''):
         # A `deposit` method that accepts an amount and description. If no description is given, it should default
         # to an empty string. The method should append an object to the ledger list in
         # the form of `{"amount": amount, "description": description}`
@@ -16,18 +16,15 @@ class Category:
         self.description = description
 
         x = {}
+        x["amount"] = amount
+        x["description"] = description
 
-        if description:
-            x["amount"] = amount
-            x["description"] = description
-        else:
-            x["amount"] = amount
         self.ledger.append(x)
         self.balance += amount
 
         # print(self.ledger)
 
-    def withdraw(self, amount, description=None):
+    def withdraw(self, amount, description=''):
         # A `withdraw` method that is similar to the `deposit` method, but the amount passed in should be
         # stored in the ledger as a negative number. If there are not enough funds,
         # nothing should be added to the ledger. This method should
@@ -41,15 +38,10 @@ class Category:
         else:
             if amount > 0:
                 amount -= amount * 2
-            x = {}
-            if description:
-                x["amount"] = amount
-                x["description"] = description
-            else:
-                x["amount"] = amount
+            x = {"amount": amount, "description": description}
+
             self.ledger.append(x)
             self.balance += amount
-            # print(self.ledger)
             return True
 
     def get_balance(self):
@@ -87,45 +79,143 @@ class Category:
     def __str__(self):
         # Prints object in nice looking format
 
-        dict = {}
-
         title_line = ('*' * ((30 - len(self.category)) // 2)) + self.category + \
                      ('*' * ((30 - len(self.category)) // 2)) + '\n'
         body_lines = ''
         footer_line = f'Total: {self.balance}'
 
-        # arranging items in self.ledger
+        # Arranging chart body
         for x in self.ledger:
             list = []
-            for v in x.values():
+            for k, v in x.items():
                 list.append(v)
-            dict[list[1]] = list[0]
-
-        # arranging transaction list
-        for k, v in dict.items():
-            line = k[:23].ljust(23) + "{:.2f}".format(v).rjust(7)
-            body_lines += line + "\n"
+            line = list[1][:23].ljust(23) + "{:.2f}".format(list[0]).rjust(7)
+            body_lines += line + '\n'
 
         chart = title_line + body_lines + footer_line
 
         return chart
 
 
+def create_spend_chart(categories):
+    # takes a list of spending Categories and return a string that is a spending bar chart
 
+    title = 'Percentage spent by category'  # title line
+    body = ''
+    y_axis = '    '+ ('-' * (3 * len(categories)) + '-')  # base line
+    labels = ''
+
+    graph = ''
+    graph += title + '\n'
+    x = 100  # max percentage
+    percent_dictionary = percentage(categories)
+
+    while x >= 0:
+        graph += (str(x) + '|').rjust(4)
+        for k, v in percent_dictionary.items():
+            if float(v) >= x:
+                graph += ' o '
+            else:
+                graph += '   '
+
+        graph += ' ' + '\n'
+        x -= 10
+
+    graph += y_axis
+
+    n_list = name_list(percent_dictionary)  # list of the category names
+    n_length = name_length(n_list)  # maximum category name length
+
+    # labels the bar graph with the category names
+    graph += '\n    '
+    row = 0
+    while row < n_length:
+        for x in n_list:
+            try:
+                graph += f' {x[row]} '
+            except:
+                graph += '   '
+        graph += ' ' + '\n'
+        graph += '    '
+        row += 1
+
+    # clean the end of the string
+    graph = graph.rstrip()
+    graph += '  '
+
+    return graph
+
+
+def name_list(percent_dictionary):
+    name_list = []  # makes a list of the category names
+    for k, v in percent_dictionary.items():
+        name_list.append(k)
+    return name_list
+
+
+def name_length(n_list):
+    max = 0  # finds maximum category name length
+    for x in n_list:
+        x_len = len(x)
+        if x_len > max:
+            max = x_len
+    return max
+
+
+def percentage(categories):
+    # Finds percentages for create_spend_chart()
+    list = []  # list of all withdraws for all categories
+    c_withdraw_totals = []  # sums for each category
+
+    for i in categories:
+        withdraw_amounts = []  # for each category
+        for x in i.ledger:
+            if x["amount"] < 0:
+                withdraw_amounts.append(x["amount"])
+                list.append(x["amount"])
+        c_withdraw_totals.append(sum(withdraw_amounts))
+
+    c_withdraw_totals = [float(i) for i in c_withdraw_totals]  # convert to float
+    list = [float(i) for i in list]  # convert to float
+
+    # finds total of list[] to calculate the average
+    total = sum(list)
+    total = "{:.2f}".format(total)
+    total = float(total)
+
+    # calculates averages for amounts spent in each category out of the total amount spent across all categories
+    list_of_averages = []
+    for i in c_withdraw_totals:
+        p = (i/total) * 100
+        p = "{:.2f}".format(p)
+        list_of_averages.append(p)
+    averages = category_w_averages(categories, list_of_averages)
+    return averages  # returns a dictionary of averages for each category
+
+def category_w_averages(categories, list_of_averages):
+    # binds each category with its average amount of spending into a list of dictionaries
+
+    # converting categories list to a list of strings
+    c_list = []
+    for x in categories:
+        c_list.append(x.category)
+
+    dictionary = dict(zip(c_list, list_of_averages))
+
+    return dictionary
+    
+    
+    
+    
+# example class/function calls
 
 food = Category("Food")
-food.deposit(1000, "initial deposit")
-food.withdraw(10.15, "groceries")
-food.withdraw(15.89, "restaurant and more food for dessert")
-# print(food.get_balance())
-clothing = Category("Clothing")
-clothing.deposit(1500, "initial deposit")
-food.transfer(50, clothing)
-clothing.withdraw(25.55)
-clothing.withdraw(100)
-auto = Category("Auto")
-auto.deposit(1000, "initial deposit")
-auto.withdraw(15)
-
-#print(food)
-print(clothing)
+entertainment = Category("Entertainment")
+business = Category("Business")
+food.deposit(900, "deposit")
+entertainment.deposit(900, "deposit")
+business.deposit(900, "deposit")
+food.withdraw(105.55)
+entertainment.withdraw(33.40)
+business.withdraw(10.99)
+create_spend_chart([business, food, entertainment])
