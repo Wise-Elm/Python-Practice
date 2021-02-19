@@ -79,9 +79,6 @@ class Rectangle:
     def __init__(self, width, height):
         self.width = width
         self.height = height
-        self.area = None
-        self.perimeter = None
-        self.diagonal = None
 
     def set_width(self, width):
         """sets the width of the rectangle"""
