@@ -77,25 +77,25 @@
 class Rectangle:
 
     def __init__(self, width, height):
-        self.width = width
-        self.height = height
+        self._width = width
+        self._height = height
 
     def set_width(self, width):
         """sets the width of the rectangle"""
-        self.width = width
+        self._width = width
 
     def set_height(self, height):
         """sets the height of the rectangle"""
-        self.height = height
+        self._height = height
 
     def get_area(self):
         """returns the area of the rectangle"""
-        self.area = self.width * self.height  # (`width * height`)
+        self.area = self._width * self._height  # (`width * height`)
         return self.area
 
     def get_perimeter(self):
         """returns the perimeter of the rectangle"""
-        self.perimeter = (2 * self.width + 2 * self.height)  # perimeter (`2 * width + 2 * height`)
+        self.perimeter = (2 * self._width + 2 * self._height)  # perimeter (`2 * width + 2 * height`)
         return self.perimeter
 
     def get_diagonal(self):
@@ -106,19 +106,19 @@ class Rectangle:
         ****
         ****"""
 
-        self.diagonal = ((self.width ** 2 + self.height ** 2) ** .5)  # diagonal (`(width ** 2 + height ** 2) ** .5`)
+        self.diagonal = ((self._width ** 2 + self._height ** 2) ** .5)  # diagonal (`(width ** 2 + height ** 2) ** .5`)
         return self.diagonal
 
     def get_picture(self):
         """returns a visual representation of the rectangle up to a max height or width of 50"""
 
-        if self.height > 50 or self.width > 50:  # makes sure rectangle does not have a height or width over 50
+        if self._height > 50 or self._width > 50:  # makes sure rectangle does not have a height or width over 50
             return "Too big for picture."
 
         # creates the rectangle representation
         stri = ''
-        row = '*' * self.width  # creates a row of '*' the same length as the rectangle width
-        for i in range(self.height):  # creates additional rows depending on the height of the rectangle
+        row = '*' * self._width  # creates a row of '*' the same length as the rectangle width
+        for i in range(self._height):  # creates additional rows depending on the height of the rectangle
             stri += row + '\n'  # adds additional rows to stri
         stri.rstrip('\n')
 
@@ -128,7 +128,7 @@ class Rectangle:
         """if an instance of Rectangle is represented as a string it will
         take the form 'Rectangle (width=5, height=10)'"""
 
-        stri = f'Rectangle(width={self.width}, height={self.height})'
+        stri = f'Rectangle(width={self._width}, height={self._height})'
 
         return stri
 
@@ -138,9 +138,9 @@ class Rectangle:
         a height of 8 could fit in itself two squares with sides of 4."""
 
         # determines how many of shape polygon can fit in the Rectangle's height
-        height_comparison = self.height // polygon.height
+        height_comparison = self._height // polygon._height
         # determines how many of shape polygon can fit in the Rectangle' width
-        width_comparison = self.width // polygon.width
+        width_comparison = self._width // polygon._width
         # makes sure at least one of the polygon can fit in the Rectangle
         if height_comparison == 0 or width_comparison == 0:
             return 0
