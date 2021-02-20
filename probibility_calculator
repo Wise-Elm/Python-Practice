@@ -1,0 +1,59 @@
+import random
+import copy
+import collections
+
+class Hat:
+
+    def __init__(self, **kwargs):
+        self.contents = []  # list of ball colors
+        for k, v in kwargs.items():
+            for i in range(v):  # makes sure there is at least 1 ball of the entered color
+                self.contents.append(k)  # creates a list of the ball colors without the number of each color
+
+    def draw(self, ball_draw):
+        """randomly picks a number balls from the hat based on the argument"""
+        balls = copy.copy(self.contents)  # new variable for self.contents so it can be changed
+        drawn_balls = []  # list of all balls drawn from the hat
+
+        if ball_draw <= len(balls):
+            for i in range(ball_draw):  # goes through balls according to the argument value
+                drawn_ball = random.choice(balls)  # randomly chooses balls from Hat
+                drawn_balls.append(drawn_ball)
+                balls.remove(drawn_ball)  # removed previously drawn balls
+                self.contents.remove(drawn_ball)
+            print(drawn_balls)
+            return drawn_balls
+        else:
+            return balls
+
+
+def experiment(hat, expected_balls, num_balls_drawn, num_experiments):
+    _matches = 0
+
+    # makes and ordered dictionary of the expected balls arguement
+    b = collections.OrderedDict(sorted(expected_balls.items()))
+
+    for i in range(num_experiments):
+        exp = hat.draw(num_balls_drawn)  # list of balls chosen
+        inst = {i:exp.count(i) for i in exp}  # makes a dictionary with k,v = ball color, counts from list exp
+        a = collections.OrderedDict(sorted(inst.items()))  # makes an ordered dictionary of the draw() return
+
+        if a == b:  # if random balls drawn are the same as the expected result _matches goes up 1
+            _matches += 1
+
+    # calculates the probability of of the draw() return matching the expected_balls arguement given the number of num_experiments
+    _probability = _matches / num_experiments
+    #print(_probability)
+    return _probability
+
+
+
+
+
+
+
+#hat1 = Hat(yellow=3, blue=2, green=6)
+#hat1.draw(2)
+
+hat = Hat(red=5,blue=2)
+probability = experiment(hat=hat, expected_balls={"blue":2,"green":1}, num_balls_drawn=2, num_experiments=1000)
