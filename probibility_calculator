@@ -12,25 +12,28 @@ class Hat:
 
     def draw(self, ball_draw):
         """randomly picks a number balls from the hat based on the argument"""
-        balls = copy.copy(self.contents)  # new variable for self.contents so it can be changed
-        drawn_balls = []  # list of all balls drawn from the hat
+        #origional_contents = copy.copy(self.contents)
+        #print(f'{self.contents} contents')
+        #print(len(self.contents))
+        #print(f'{ball_draw} ball_draw')
+        if ball_draw >= len(self.contents):
+            return self.contents
 
-        if ball_draw <= len(balls):
-            for i in range(ball_draw):  # goes through balls according to the argument value
-                drawn_ball = random.choice(balls)  # randomly chooses balls from Hat
-                drawn_balls.append(drawn_ball)
-                balls.remove(drawn_ball)  # removed previously drawn balls
-                self.contents.remove(drawn_ball)
-            print(drawn_balls)
-            return drawn_balls
         else:
-            return balls
+            drawn_balls = []  # list of all balls drawn from the hat
+            for i in range(ball_draw):  # goes through balls according to the argument value
+                drawn_ball = random.choice(self.contents)  # randomly chooses balls from Hat
+                drawn_balls.append(drawn_ball)
+                self.contents.remove(drawn_ball)
+
+        #self.contents = origional_contents
+            return drawn_balls
 
 
 def experiment(hat, expected_balls, num_balls_drawn, num_experiments):
     _matches = 0
 
-    # makes and ordered dictionary of the expected balls arguement
+    # makes and ordered dictionary of the expected balls argument
     b = collections.OrderedDict(sorted(expected_balls.items()))
 
     for i in range(num_experiments):
@@ -45,15 +48,3 @@ def experiment(hat, expected_balls, num_balls_drawn, num_experiments):
     _probability = _matches / num_experiments
     #print(_probability)
     return _probability
-
-
-
-
-
-
-
-#hat1 = Hat(yellow=3, blue=2, green=6)
-#hat1.draw(2)
-
-hat = Hat(red=5,blue=2)
-probability = experiment(hat=hat, expected_balls={"blue":2,"green":1}, num_balls_drawn=2, num_experiments=1000)
