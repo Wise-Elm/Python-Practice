@@ -1,0 +1,71 @@
+import pandas as pd
+import sqlite3
+import datetime
+from datetime import timedelta
+
+#Reading Wikipedia Table
+file = "dndmonsters.csv"
+data = pd.read_csv(file, index_col=0, header=0,
+                   encoding="cp1252", thousands=",")
+print(data.tail())
+print(data.columns)
+
+#Connecting to Database
+conn = sqlite3.connect('dndmonsters.sqlite3')
+cur = conn.cursor()
+
+cur.executescript('''
+DROP TABLE IF EXISTS monsters;
+
+CREATE TABLE monsters (
+    Creature   TEXT,
+    Size   TEXT,
+    Type   TEXT,
+    Alignment   TEXT,
+    CR   FLO,
+    Source  TEXT
+    );
+    ''')
+
+for i in data.iterrows():
+
+    print(i)
+
+    cur.execute('''INSERT OR IGNORE INTO monsters (Creature, Size, Type, Alignment, CR, Source)
+        VALUES (?, ?, ?, ?, ?, ?)
+        ''', (i[1][0], i[1][1], i[1][2], i[1][3], i[1][4], i[1][5]) )
+
+
+conn.commit()
+conn.close()
+
+
+
+
+#########I can't seem to get this to work. I want to input the .csv table into sqlite usint python. This is the result:
+
+"C:\Users\steed\Documents\Graham Personal\Homedir\PyCharm Projects\venv\Scripts\python.exe" "C:/Users/steed/Documents/Graham Personal/Homedir/PyCharm Projects/sqlite_practice/people.py"
+                     Size                   Type  ...    CR                Source
+Monster                                           ...                            
+Yuan-ti Pureblood  Medium     Humanoid (yuan-ti)  ...     1        Monster Manual
+Yusdrayl            Small      Humanoid (kobold)  ...     1        Yawning Portal
+Zi Liang           Medium  Humanoid (shou Human)  ...     0  Storm King's Thunder
+Zombie             Medium                 Undead  ...  0.25        Monster Manual
+Zuggtmoy            Large          Fiend (demon)  ...    23      Out of the Abyss
+
+[5 rows x 5 columns]
+Index(['Size', 'Type', 'Alignment', 'CR', 'Source'], dtype='object')
+Traceback (most recent call last):
+  File "C:/Users/steed/Documents/Graham Personal/Homedir/PyCharm Projects/sqlite_practice/people.py", line 36, in <module>
+    ''', (i[1][0], i[1][1], i[1][2], i[1][3], i[1][4], i[1][5]) )
+  File "C:\Users\steed\Documents\Graham Personal\Homedir\PyCharm Projects\venv\lib\site-packages\pandas\core\series.py", line 848, in __getitem__
+    return self._values[key]
+IndexError: index 5 is out of bounds for axis 0 with size 5
+('Aarakocra', Size                       Medium
+Type         Humanoid (aarakocra)
+Alignment            Neutral Good
+CR                           0.25
+Source             Monster Manual
+Name: Aarakocra, dtype: object)
+
+Process finished with exit code 1
